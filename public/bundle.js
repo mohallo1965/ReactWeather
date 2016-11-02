@@ -119,7 +119,7 @@
 	//fire up foundation
 	$(document).foundation();
 	
-	//load our own syles with the defined loaders style and css with alias applicationStyles referenced in webpack.config.js
+	//App CSS load our own syles with the defined loaders style,css,sass with alias applicationStyles referenced in webpack.config.js
 	__webpack_require__(261);
 	
 	ReactDOM.render(React.createElement(
@@ -27371,8 +27371,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./app.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./app.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./app.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./app.scss");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -27390,7 +27390,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".page-title {\r\n\r\n margin-top: 2.5rem;\r\n margin-bottom:2.5rem;\r\n\r\n}\r\n\r\ninput[type=search] {\r\n\r\n    box-shadow:none\r\n}", ""]);
+	exports.push([module.id, ".page-title {\n  margin-top: 2.5rem;\n  margin-bottom: 2.5rem;\n  color: #555; }\n\ninput[type=search] {\n  box-shadow: none; }\n", ""]);
 	
 	// exports
 

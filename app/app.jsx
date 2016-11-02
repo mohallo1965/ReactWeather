@@ -27,8 +27,8 @@ require('style!css!foundation-sites/dist/foundation.min.css');
 //fire up foundation
 $(document).foundation();
 
-//load our own syles with the defined loaders style and css with alias applicationStyles referenced in webpack.config.js
-require('style!css!applicationStyles');
+//App CSS load our own syles with the defined loaders style,css,sass with alias applicationStyles referenced in webpack.config.js
+require('style!css!sass!applicationStyles');
 
 
 ReactDOM.render(
