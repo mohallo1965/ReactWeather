@@ -24856,33 +24856,34 @@
 	var React = __webpack_require__(1);
 	var Nav = __webpack_require__(217);
 	
-	//var Main = React.createClass({
+	var Main = React.createClass({
+	  displayName: 'Main',
 	
-	//    render: function () {
-	//        return (
-	//          <div>
-	//            <Nav/>
-	//            <h2>Main Component</h2>
-	//            {this.props.children}
-	//          </div>
-	//        );
-	//    }
-	//});
 	
-	var Main = function Main(props) {
-	
-	  return React.createElement(
-	    'div',
-	    null,
-	    React.createElement(Nav, null),
-	    React.createElement(
-	      'h2',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
 	      null,
-	      'Main Component'
-	    ),
-	    props.children
-	  );
-	};
+	      React.createElement(Nav, null),
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Main Component'
+	      ),
+	      this.props.children
+	    );
+	  }
+	});
+	
+	//var Main = (props) =>{
+	
+	//  return (
+	//         <div>
+	//           {props.children}
+	//         </div>
+	//       );
+	
+	//}
 	
 	module.exports = Main;
 
