@@ -25144,7 +25144,7 @@
 	
 	                                return React.createElement(
 	                                        'h3',
-	                                        null,
+	                                        { className: 'text-center' },
 	                                        'Fetching Weather...'
 	                                );
 	                        } else if (temp && cityName) {
@@ -25162,8 +25162,8 @@
 	                                'div',
 	                                null,
 	                                React.createElement(
-	                                        'h3',
-	                                        null,
+	                                        'h1',
+	                                        { className: 'text-center' },
 	                                        'Get Weather'
 	                                )
 	                        ),
@@ -25215,7 +25215,11 @@
 	                                    'form',
 	                                    { onSubmit: this.onFormSubmit },
 	                                    React.createElement('input', { type: 'text', ref: 'cityName', placeholder: 'Enter City Name' }),
-	                                    React.createElement('input', { type: 'submit', value: 'Get Weather' })
+	                                    React.createElement(
+	                                             'button',
+	                                             { className: 'button expanded hollow' },
+	                                             'Get Weather'
+	                                    )
 	                           )
 	                  );
 	         }
@@ -25228,7 +25232,7 @@
 /* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var React = __webpack_require__(8);
 	
@@ -25256,12 +25260,13 @@
 	    //var { cityName, temp} = props;
 	
 	    return React.createElement(
-	        'h3',
-	        null,
-	        cityName,
-	        ' Temperature is ',
+	        "h3",
+	        { className: "text-center" },
+	        "It is ",
 	        temp,
-	        ' '
+	        " in ",
+	        cityName,
+	        " "
 	    );
 	};
 	

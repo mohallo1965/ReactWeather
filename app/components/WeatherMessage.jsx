@@ -22,7 +22,7 @@ var WeatherMessage = ( { cityName,temp }) =>{
 
     return(
            
-            <h3>{cityName} Temperature is {temp} </h3>
+            <h3 className="text-center">It is {temp} in {cityName} </h3>
 
         );
 }
