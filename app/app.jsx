@@ -22,10 +22,14 @@ var firstName = "Mairtin";
 var message = "Hello from Martin O'Halloran";
 
 
-//Load foundation.chain style and css loader we installed.
+//Load foundation with loaders style and css.
 require('style!css!foundation-sites/dist/foundation.min.css');
 //fire up foundation
 $(document).foundation();
+
+//load our own syles with the defined loaders style and css with alias applicationStyles referenced in webpack.config.js
+require('style!css!applicationStyles');
+
 
 ReactDOM.render(
          <Router history={hashHistory}>
