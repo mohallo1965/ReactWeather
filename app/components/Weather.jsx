@@ -2,6 +2,7 @@ var React = require('react');
 var WeatherForm = require('WeatherForm');
 var WeatherMessage = require('WeatherMessage');
 var openWeatherMap = require('openWeatherMap');
+var ErrorModal = require('ErrorModal');
 
 var Weather = React.createClass({
 
@@ -16,7 +17,8 @@ var Weather = React.createClass({
     getInitialState:function(){
 
         return{
-          isLoading:false
+          isLoading:false,
+          errorMessage:undefined
           //cityName:this.props.cityName,
           //temp:this.props.temp
         }
@@ -24,8 +26,6 @@ var Weather = React.createClass({
 
     handleSearch:function(data){
         var that = this;
-
-        debugger;  
 
         that.setState({isLoading:true});
 
@@ -40,19 +40,23 @@ var Weather = React.createClass({
                isLoading:false
           });
 
-        },function(errorMessage) {
-             alert(errorMessage);
-             that.setState({isLoading:false});
+        },function(e) {
+             debugger;
+             //e is what is passed back and has property message so e.message
+             that.setState({
+               isLoading:false,
+               errorMessage:e.message
+              });
         });
 
     },
     render:function(){
         //var cityName = this.state.cityName;//get data from form object if not provided get from defaultprops
         //var temp = this.state.temp;
-        var {isLoading,temp,cityName} = this.state; //temp and
+        var {isLoading,temp,cityName,errorMessage} = this.state; //temp and
 
         function renderMessage(){
-
+          
           if(isLoading){
 
             return <h3 className="text-center">Fetching Weather...</h3>;
@@ -60,6 +64,18 @@ var Weather = React.createClass({
           }else if(temp && cityName){
              return  <WeatherMessage temp={temp} cityName={cityName}/>
           }
+        }
+
+
+        function renderError(){
+             debugger;
+             //previously defined as undefined in getInitialState
+             if (typeof errorMessage === 'string'){
+                return (
+                  <ErrorModal message={errorMessage}/>
+                )
+
+             }
         }
 
         console.log('In rendering city is '+cityName);
@@ -75,6 +91,7 @@ var Weather = React.createClass({
              <WeatherForm onSearch={this.handleSearch} />
 
              {renderMessage()}
+             {renderError()}
              
            </div>
           </div>
