@@ -26783,7 +26783,7 @@
 /* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var React = __webpack_require__(8);
 	
@@ -26802,20 +26802,53 @@
 	
 	//stateless functional component.Replaced the React.createClass .
 	var About = function About(props) {
-	  return React.createElement(
-	    'div',
-	    null,
-	    React.createElement(
-	      'h3',
+	   return React.createElement(
+	      "div",
 	      null,
-	      'About'
-	    ),
-	    React.createElement(
-	      'p',
-	      null,
-	      'Welcome to About Page'
-	    )
-	  );
+	      React.createElement(
+	         "h1",
+	         { className: "text-center" },
+	         "About"
+	      ),
+	      React.createElement(
+	         "p",
+	         null,
+	         "This is a Weather application built on the Web Framework React"
+	      ),
+	      React.createElement(
+	         "p",
+	         null,
+	         "Here are some of the tools I used:"
+	      ),
+	      React.createElement(
+	         "p",
+	         null,
+	         React.createElement(
+	            "ul",
+	            null,
+	            React.createElement(
+	               "li",
+	               null,
+	               React.createElement(
+	                  "a",
+	                  { href: "https://facebook.github.io/react" },
+	                  "React"
+	               ),
+	               " - This was the JavaScript Framework used."
+	            ),
+	            React.createElement(
+	               "li",
+	               null,
+	               React.createElement(
+	                  "a",
+	                  { href: "http://openweathermap.org" },
+	                  "Open Weather Map"
+	               ),
+	               " - I used Open Weather Map to search for data by city Name."
+	            )
+	         )
+	      )
+	   );
 	};
 	
 	module.exports = About;
