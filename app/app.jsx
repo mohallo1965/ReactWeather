@@ -20,6 +20,13 @@ var Examples = require('Examples');
 
 var firstName = "Mairtin";
 var message = "Hello from Martin O'Halloran";
+
+
+//Load foundation.chain style and css loader we installed.
+require('style!css!foundation-sites/dist/foundation.min.css');
+//fire up foundation
+$(document).foundation();
+
 ReactDOM.render(
          <Router history={hashHistory}>
             <Route path="/" component={Main}>
