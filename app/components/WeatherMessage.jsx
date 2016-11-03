@@ -15,14 +15,14 @@ var React = require('react');
 
 
 //add destructering as parametres same as 'var { cityName, temp} = props;''
-var WeatherMessage = ( { cityName,temp }) =>{
+var WeatherMessage = ( { location,temp }) =>{
 
     //Es6 Destructering .done in the signature 
     //var { cityName, temp} = props;
 
     return(
            
-            <h3 className="text-center">It is {temp} in {cityName} </h3>
+            <h3 className="text-center">It is {temp} in {location} </h3>
 
         );
 }

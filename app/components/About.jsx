@@ -23,7 +23,7 @@ var About = (props) =>{
            <p>This is a Weather application built on the Web Framework React</p>
 
            <p>Here are some of the tools I used:</p>
-           <p>
+           
              <ul>
               <li>
                  <a href="https://facebook.github.io/react">React</a> - This was the 
@@ -36,7 +36,7 @@ var About = (props) =>{
 
              </ul>
            
-           </p>
+          
           </div>
         );
 }

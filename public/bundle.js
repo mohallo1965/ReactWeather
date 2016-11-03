@@ -24977,7 +24977,16 @@
 	
 	   onSearch: function onSearch(e) {
 	      e.preventDefault();
-	      alert('Not yet wired up');
+	
+	      var location = this.refs.search.value;
+	      alert('Search value is ' + location);
+	
+	      var encodedLocation = encodeURIComponent(location);
+	      if (location.length > 0) {
+	
+	         this.refs.search.value = '';
+	         window.location.hash = '#/?location=' + encodedLocation;
+	      }
 	   },
 	   render: function render() {
 	
@@ -25036,7 +25045,7 @@
 	                  React.createElement(
 	                     'li',
 	                     null,
-	                     React.createElement('input', { type: 'search', placeholder: 'Search weather by City' })
+	                     React.createElement('input', { type: 'search', ref: 'search', placeholder: 'Search weather by City' })
 	                  ),
 	                  React.createElement(
 	                     'li',
@@ -25086,6 +25095,8 @@
 
 	'use strict';
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
 	var React = __webpack_require__(8);
 	var WeatherForm = __webpack_require__(226);
 	var WeatherMessage = __webpack_require__(227);
@@ -25093,105 +25104,140 @@
 	var ErrorModal = __webpack_require__(254);
 	
 	var Weather = React.createClass({
-	        displayName: 'Weather',
+	  displayName: 'Weather',
 	
 	
-	        getDefaultProps: function getDefaultProps() {
+	  getDefaultProps: function getDefaultProps() {
 	
-	                return {
-	                        cityName: 'Ennis',
-	                        temp: '43'
-	                };
-	        },
-	        getInitialState: function getInitialState() {
+	    return {
+	      location: 'Ennis',
+	      temp: '43'
+	    };
+	  },
+	  getInitialState: function getInitialState() {
 	
-	                return {
-	                        isLoading: false,
-	                        errorMessage: undefined
-	                        //cityName:this.props.cityName,
-	                        //temp:this.props.temp
-	                };
-	        },
+	    return {
+	      isLoading: false,
+	      errorMessage: undefined
+	      //cityName:this.props.cityName,
+	      //temp:this.props.temp
+	    };
+	  },
 	
-	        handleSearch: function handleSearch(data) {
-	                var that = this;
+	  handleSearch: function handleSearch(location) {
+	    var that = this;
+	    debugger;
+	    this.setState({
+	      isLoading: true,
+	      errorMessage: undefined,
+	      location: undefined,
+	      temp: undefined
+	    });
 	
-	                that.setState({ isLoading: true });
+	    if ((typeof location === 'undefined' ? 'undefined' : _typeof(location)) === 'object') location = location.location;
 	
-	                console.log('New Data is:' + data.cityName);
+	    //console.log('New Data is:'+data.location);
 	
-	                openWeatherMap.getTemp(data.cityName).then(function (temp) {
+	    openWeatherMap.getTemp(location).then(function (temp) {
 	
-	                        that.setState({
+	      that.setState({
+	        location: location,
+	        temp: temp,
+	        isLoading: false
+	      });
+	      console.log("state after call to weather app:" + that.state.temp);
+	      console.log("state after call to weather app:" + that.state.location);
 	
-	                                cityName: data.cityName,
-	                                temp: temp,
-	                                isLoading: false
-	                        });
-	                }, function (e) {
-	                        debugger;
-	                        //e is what is passed back and has property message so e.message
-	                        that.setState({
-	                                isLoading: false,
-	                                errorMessage: e.message
-	                        });
-	                });
-	        },
-	        render: function render() {
-	                //var cityName = this.state.cityName;//get data from form object if not provided get from defaultprops
-	                //var temp = this.state.temp;
-	                var _state = this.state;
-	                var isLoading = _state.isLoading;
-	                var temp = _state.temp;
-	                var cityName = _state.cityName;
-	                var errorMessage = _state.errorMessage; //temp and
+	      debugger;
+	    }, function (e) {
+	      debugger;
+	      //e is what is passed back and has property message so e.message
+	      that.setState({
+	        isLoading: false,
+	        location: undefined,
+	        temp: undefined,
+	        errorMessage: e.message
+	      });
+	    });
+	  },
+	  componentDidMount: function componentDidMount() {
 	
-	                function renderMessage() {
+	    //router provides quite a number of usefull props one being location which can get the query string
+	    var location = this.props.location.query.location;
+	    debugger;
+	    if (location && location.length > 0) {
+	      this.handleSearch(location);
+	      window.location.hash = '#/';
+	    }
+	  },
+	  //this function will get called anytime it component props change.
+	  //it will capture prop changes.
+	  //React router will change the value of Props when the url changes .
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
 	
-	                        if (isLoading) {
+	    debugger;
+	    var location = newProps.location.query.location;
 	
-	                                return React.createElement(
-	                                        'h3',
-	                                        { className: 'text-center' },
-	                                        'Fetching Weather...'
-	                                );
-	                        } else if (temp && cityName) {
-	                                return React.createElement(WeatherMessage, { temp: temp, cityName: cityName });
-	                        }
-	                }
+	    if (location && location.length > 0) {
+	      this.handleSearch(location);
+	      window.location.hash = '#/';
+	    }
+	  },
+	  render: function render() {
+	    //var cityName = this.state.cityName;//get data from form object if not provided get from defaultprops
+	    //var temp = this.state.temp;
+	    var _state = this.state;
+	    var isLoading = _state.isLoading;
+	    var temp = _state.temp;
+	    var location = _state.location;
+	    var errorMessage = _state.errorMessage; //temp and
 	
-	                function renderError() {
-	                        debugger;
-	                        //previously defined as undefined in getInitialState
-	                        if (typeof errorMessage === 'string') {
-	                                return React.createElement(ErrorModal, { message: errorMessage });
-	                        }
-	                }
+	    function renderMessage() {
+	      debugger;
+	      if (isLoading) {
 	
-	                console.log('In rendering city is ' + cityName);
-	                console.log('In rendering Temp is' + temp);
+	        return React.createElement(
+	          'h3',
+	          { className: 'text-center' },
+	          'Fetching Weather...'
+	        );
+	      } else if (temp && location) {
+	        return React.createElement(WeatherMessage, { temp: temp, location: location });
+	      }
+	    }
 	
-	                return React.createElement(
-	                        'div',
-	                        null,
-	                        React.createElement(
-	                                'div',
-	                                null,
-	                                React.createElement(
-	                                        'h1',
-	                                        { className: 'text-center page-title' },
-	                                        'Get Weather'
-	                                )
-	                        ),
-	                        React.createElement(
-	                                'div',
-	                                null,
-	                                React.createElement(WeatherForm, { onSearch: this.handleSearch }),
-	                                renderMessage(),
-	                                renderError()
-	                        )
-	                );
-	        }
+	    function renderError() {
+	      debugger;
+	      //previously defined as undefined in getInitialState
+	      if (typeof errorMessage === 'string') {
+	        return React.createElement(ErrorModal, { message: errorMessage });
+	      }
+	    }
+	
+	    console.log('In rendering city is ' + location);
+	    console.log('In rendering Temp is' + temp);
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h1',
+	          { className: 'text-center page-title' },
+	          'Get Weather'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(WeatherForm, { onSearch: this.handleSearch }),
+	        renderMessage(),
+	        renderError()
+	      )
+	    );
+	  }
 	
 	});
 	
@@ -25213,13 +25259,13 @@
 	
 	                  e.preventDefault();
 	
-	                  var cityName = this.refs.cityName.value;
+	                  var location = this.refs.location.value;
 	
 	                  var formData = {};
 	
-	                  if (cityName.length > 0) {
-	                           formData.cityName = cityName;
-	                           this.refs.cityName.value = '';
+	                  if (location.length > 0) {
+	                           formData.location = location;
+	                           this.refs.location.value = '';
 	                  }
 	                  this.props.onSearch(formData);
 	         },
@@ -25231,7 +25277,7 @@
 	                           React.createElement(
 	                                    'form',
 	                                    { onSubmit: this.onFormSubmit },
-	                                    React.createElement('input', { type: 'search', ref: 'cityName', placeholder: 'Search Weather by City' }),
+	                                    React.createElement('input', { type: 'search', ref: 'location', placeholder: 'Search Weather by City' }),
 	                                    React.createElement(
 	                                             'button',
 	                                             { className: 'button expanded hollow' },
@@ -25269,7 +25315,7 @@
 	
 	//add destructering as parametres same as 'var { cityName, temp} = props;''
 	var WeatherMessage = function WeatherMessage(_ref) {
-	    var cityName = _ref.cityName;
+	    var location = _ref.location;
 	    var temp = _ref.temp;
 	
 	
@@ -25282,7 +25328,7 @@
 	        "It is ",
 	        temp,
 	        " in ",
-	        cityName,
+	        location,
 	        " "
 	    );
 	};
@@ -25300,8 +25346,8 @@
 	var OPEN_WEATHER_MAP_URL = 'http://api.openweathermap.org/data/2.5/weather?units=imperial&appid=115e1d44ef0526d76360f3d811c2a0ef';
 	module.exports = {
 	
-	       getTemp: function getTemp(cityName) {
-	              var encodedLocation = encodeURIComponent(cityName);
+	       getTemp: function getTemp(location) {
+	              var encodedLocation = encodeURIComponent(location);
 	
 	              //the ` allows us to inject variables into the string .
 	              var requestUrl = OPEN_WEATHER_MAP_URL + '&q=' + encodedLocation;
@@ -25314,6 +25360,9 @@
 	                            return res.data.main.temp;
 	                     }
 	              }, function (res) {
+	
+	                     debugger;
+	                     console.log("Error in communicating with Host");
 	
 	                     throw new Error(res.data.message);
 	              });
@@ -26908,31 +26957,27 @@
 	         "Here are some of the tools I used:"
 	      ),
 	      React.createElement(
-	         "p",
+	         "ul",
 	         null,
 	         React.createElement(
-	            "ul",
+	            "li",
 	            null,
 	            React.createElement(
-	               "li",
-	               null,
-	               React.createElement(
-	                  "a",
-	                  { href: "https://facebook.github.io/react" },
-	                  "React"
-	               ),
-	               " - This was the JavaScript Framework used."
+	               "a",
+	               { href: "https://facebook.github.io/react" },
+	               "React"
 	            ),
+	            " - This was the JavaScript Framework used."
+	         ),
+	         React.createElement(
+	            "li",
+	            null,
 	            React.createElement(
-	               "li",
-	               null,
-	               React.createElement(
-	                  "a",
-	                  { href: "http://openweathermap.org" },
-	                  "Open Weather Map"
-	               ),
-	               " - I used Open Weather Map to search for data by city Name."
-	            )
+	               "a",
+	               { href: "http://openweathermap.org" },
+	               "Open Weather Map"
+	            ),
+	            " - I used Open Weather Map to search for data by city Name."
 	         )
 	      )
 	   );
@@ -26986,8 +27031,8 @@
 	        null,
 	        React.createElement(
 	          Link,
-	          { to: '/?location=Philleldelphia' },
-	          'Philleldelphia, PA'
+	          { to: '/?location=Denver' },
+	          'Denver, CO'
 	        )
 	      ),
 	      React.createElement(

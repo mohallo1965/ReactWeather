@@ -22,7 +22,7 @@ var Examples = (props) =>{
 
              <ol>
               <li>
-                <Link to='/?location=Philleldelphia'>Philleldelphia, PA</Link>
+                <Link to='/?location=Denver'>Denver, CO</Link>
 
               </li>
               <li>

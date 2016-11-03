@@ -10,7 +10,7 @@ var Weather = React.createClass({
     getDefaultProps:function(){
 
        return{
-        cityName:'Ennis',
+        location:'Ennis',
         temp:'43'
        };
     },
@@ -24,45 +24,82 @@ var Weather = React.createClass({
         }
     },
 
-    handleSearch:function(data){
+    handleSearch:function(location){
         var that = this;
+        debugger;
+        this.setState({
+          isLoading:true,
+          errorMessage:undefined,
+          location:undefined,
+          temp:undefined
+        });
 
-        that.setState({isLoading:true});
+        if(typeof location === 'object')
+           location = location.location;
+        
+        //console.log('New Data is:'+data.location);
 
-        console.log('New Data is:'+data.cityName);
-
-        openWeatherMap.getTemp(data.cityName).then(function(temp){
+        openWeatherMap.getTemp(location).then(function(temp){
         
           that.setState({
-
-               cityName:data.cityName,
+               location:location,
                temp:temp,
                isLoading:false
           });
+          console.log("state after call to weather app:"+that.state.temp);
+          console.log("state after call to weather app:"+that.state.location);
+
+          debugger;
 
         },function(e) {
              debugger;
              //e is what is passed back and has property message so e.message
              that.setState({
                isLoading:false,
+               location:undefined,
+               temp:undefined,
                errorMessage:e.message
               });
         });
 
     },
-    render:function(){
+    componentDidMount:function(){
+
+      //router provides quite a number of usefull props one being location which can get the query string
+      var location=this.props.location.query.location;
+      debugger;
+      if(location && location.length > 0){
+        this.handleSearch(location);
+        window.location.hash = '#/';
+      }
+   },
+   //this function will get called anytime it component props change.
+   //it will capture prop changes.
+   //React router will change the value of Props when the url changes .
+   componentWillReceiveProps:function(newProps){
+
+      debugger;
+      var location = newProps.location.query.location;
+
+      if(location && location.length > 0){
+        this.handleSearch(location);
+        window.location.hash = '#/';
+      } 
+          
+   },
+   render:function(){
         //var cityName = this.state.cityName;//get data from form object if not provided get from defaultprops
         //var temp = this.state.temp;
-        var {isLoading,temp,cityName,errorMessage} = this.state; //temp and
+        var {isLoading,temp,location,errorMessage} = this.state; //temp and
 
         function renderMessage(){
-          
+          debugger;
           if(isLoading){
 
             return <h3 className="text-center">Fetching Weather...</h3>;
 
-          }else if(temp && cityName){
-             return  <WeatherMessage temp={temp} cityName={cityName}/>
+          }else if(temp && location){
+             return  <WeatherMessage temp={temp} location={location}/>
           }
         }
 
@@ -78,7 +115,7 @@ var Weather = React.createClass({
              }
         }
 
-        console.log('In rendering city is '+cityName);
+        console.log('In rendering city is '+location);
         console.log('In rendering Temp is'+temp);
 
         return (
