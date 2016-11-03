@@ -108,19 +108,19 @@
 	
 	var Main = __webpack_require__(223);
 	var Weather = __webpack_require__(225);
-	var About = __webpack_require__(255);
-	var Examples = __webpack_require__(256);
+	var About = __webpack_require__(256);
+	var Examples = __webpack_require__(257);
 	
 	var firstName = "Mairtin";
 	var message = "Hello from Martin O'Halloran";
 	
 	//Load foundation with loaders style and css.
-	__webpack_require__(257);
+	__webpack_require__(258);
 	//fire up foundation
 	$(document).foundation();
 	
 	//App CSS load our own syles with the defined loaders style,css,sass with alias applicationStyles referenced in webpack.config.js
-	__webpack_require__(261);
+	__webpack_require__(262);
 	
 	ReactDOM.render(React.createElement(
 	    Router,
@@ -25160,7 +25160,11 @@
 	      });
 	    });
 	  },
+	  componentWillMount: function componentWillMount() {
+	    console.log("componentWillMount method call");
+	  },
 	  componentDidMount: function componentDidMount() {
+	    console.log("componentDidMount method call");
 	
 	    //router provides quite a number of usefull props one being location which can get the query string
 	    var location = this.props.location.query.location;
@@ -25173,7 +25177,12 @@
 	  //this function will get called anytime it component props change.
 	  //it will capture prop changes.
 	  //React router will change the value of Props when the url changes .
+	  //The issue here is because we are on the Weather Page with the weather form ComponentDidMount will not
+	  //fire because we are on that page .It will work when searching from other pages as componentWillMount will 
+	  //fire .
 	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	
+	    console.log("componentWillReceiveProps method call");
 	
 	    debugger;
 	    var location = newProps.location.query.location;
@@ -25184,6 +25193,8 @@
 	    }
 	  },
 	  render: function render() {
+	    console.log("render method Call");
+	
 	    //var cityName = this.state.cityName;//get data from form object if not provided get from defaultprops
 	    //var temp = this.state.temp;
 	    var _state = this.state;
@@ -26857,58 +26868,105 @@
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
 	
 	var React = __webpack_require__(8);
+	var ReactDOM = __webpack_require__(165);
+	var ReactDOMServer = __webpack_require__(255);
 	
 	var ErrorModel = React.createClass({
-	     displayName: 'ErrorModel',
+	        displayName: 'ErrorModel',
 	
 	
-	     getDefaultProps: function getDefaultProps() {
+	        getDefaultProps: function getDefaultProps() {
 	
-	          return {
+	                return {
 	
-	               title: 'Error'
-	          };
-	     },
-	     propTypes: {
-	          title: React.PropTypes.string,
-	          message: React.PropTypes.string.isRequired
-	     },
-	     componentDidMount: function componentDidMount() {
-	          //create instance of our modal by calling Foundation.Reveal 
-	          //and pass it the component id we want to create
-	          var model = new Foundation.Reveal($('#error-modal'));
-	          model.open();
-	     },
-	     render: function render() {
-	          var _props = this.props;
-	          var title = _props.title;
-	          var message = _props.message;
+	                        title: 'Error'
+	                };
+	        },
+	        propTypes: {
+	                title: React.PropTypes.string,
+	                message: React.PropTypes.string.isRequired
+	        },
+	        componentDidMount: function componentDidMount() {
+	                var _props = this.props;
+	                var title = _props.title;
+	                var message = _props.message;
 	
 	
-	          return React.createElement(
-	               'div',
-	               { id: 'error-modal', className: 'reveal tiny text-center', 'data-reveal': '' },
-	               React.createElement(
-	                    'h4',
-	                    null,
-	                    title
-	               ),
-	               React.createElement(
-	                    'p',
-	                    null,
-	                    message
-	               ),
-	               React.createElement(
-	                    'p',
-	                    null,
-	                    React.createElement(
-	                         'button',
-	                         { className: 'button hollow', 'data-close': '' },
-	                         'Okay'
-	                    )
-	               )
-	          );
-	     }
+	                var modalMarkup = React.createElement(
+	                        'div',
+	                        { id: 'error-modal', className: 'reveal tiny text-center', 'data-reveal': '' },
+	                        React.createElement(
+	                                'h4',
+	                                null,
+	                                title
+	                        ),
+	                        React.createElement(
+	                                'p',
+	                                null,
+	                                message
+	                        ),
+	                        React.createElement(
+	                                'p',
+	                                null,
+	                                React.createElement(
+	                                        'button',
+	                                        { className: 'button hollow', 'data-close': '' },
+	                                        'Okay'
+	                                )
+	                        )
+	                );
+	
+	                //Add markup to the DOM
+	                var $modal = $(ReactDOMServer.renderToString(modalMarkup));
+	                $(ReactDOM.findDOMNode(this)).html($modal);
+	
+	                //create instance of our modal by calling Foundation.Reveal 
+	                //and pass it the component id we want to create
+	                var model = new Foundation.Reveal($('#error-modal'));
+	                model.open();
+	        },
+	        render: function render() {
+	
+	                //To fix the issue of when we put in a bad loacation and then put in a good location it does not work and
+	                // does not return anything.The bottom line is that foundation does not work well with React.
+	                //After React puts the elements in the DOM ,Foundation is removing them .Bottom line these components do not
+	                //play well together in this case .
+	
+	                //just creating an empty DOM .Moved all the code to the CompontDidMount function and created the Elements in that
+	                //function .
+	                return React.createElement('div', null);
+	        },
+	
+	        renderOld: function renderOld() {
+	                var _props2 = this.props;
+	                var title = _props2.title;
+	                var message = _props2.message;
+	
+	
+	                return React.createElement(
+	                        'div',
+	                        { id: 'error-modal', className: 'reveal tiny text-center', 'data-reveal': '' },
+	                        React.createElement(
+	                                'h4',
+	                                null,
+	                                title
+	                        ),
+	                        React.createElement(
+	                                'p',
+	                                null,
+	                                message
+	                        ),
+	                        React.createElement(
+	                                'p',
+	                                null,
+	                                React.createElement(
+	                                        'button',
+	                                        { className: 'button hollow', 'data-close': '' },
+	                                        'Okay'
+	                                )
+	                        )
+	                );
+	        }
 	
 	});
 	
@@ -26917,6 +26975,15 @@
 
 /***/ },
 /* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	module.exports = __webpack_require__(155);
+
+
+/***/ },
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -26986,7 +27053,7 @@
 	module.exports = About;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27051,16 +27118,16 @@
 	module.exports = Examples;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(258);
+	var content = __webpack_require__(259);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(260)(content, {});
+	var update = __webpack_require__(261)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27077,10 +27144,10 @@
 	}
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(259)();
+	exports = module.exports = __webpack_require__(260)();
 	// imports
 	
 	
@@ -27091,7 +27158,7 @@
 
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports) {
 
 	/*
@@ -27147,7 +27214,7 @@
 
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -27401,16 +27468,16 @@
 
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(262);
+	var content = __webpack_require__(263);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(260)(content, {});
+	var update = __webpack_require__(261)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27427,10 +27494,10 @@
 	}
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(259)();
+	exports = module.exports = __webpack_require__(260)();
 	// imports
 	
 	

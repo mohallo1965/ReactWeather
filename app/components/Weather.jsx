@@ -63,7 +63,11 @@ var Weather = React.createClass({
         });
 
     },
+    componentWillMount:function(){
+      console.log("componentWillMount method call");
+    },
     componentDidMount:function(){
+      console.log("componentDidMount method call");
 
       //router provides quite a number of usefull props one being location which can get the query string
       var location=this.props.location.query.location;
@@ -76,7 +80,12 @@ var Weather = React.createClass({
    //this function will get called anytime it component props change.
    //it will capture prop changes.
    //React router will change the value of Props when the url changes .
+   //The issue here is because we are on the Weather Page with the weather form ComponentDidMount will not
+   //fire because we are on that page .It will work when searching from other pages as componentWillMount will 
+   //fire .
    componentWillReceiveProps:function(newProps){
+
+      console.log("componentWillReceiveProps method call");
 
       debugger;
       var location = newProps.location.query.location;
@@ -88,6 +97,8 @@ var Weather = React.createClass({
           
    },
    render:function(){
+        console.log("render method Call");
+        
         //var cityName = this.state.cityName;//get data from form object if not provided get from defaultprops
         //var temp = this.state.temp;
         var {isLoading,temp,location,errorMessage} = this.state; //temp and
